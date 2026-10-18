@@ -3,7 +3,7 @@
   <!--begin::Head-->
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>{{ !empty($header_title) ? $header_title : ' ' }} - Ecommerce </title>
+    <title>{{ !empty($header_title) ? $header_title : ' ' }} - School Management</title>
 
     <!--begin::Accessibility Meta Tags-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />

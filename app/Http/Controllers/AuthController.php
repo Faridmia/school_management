@@ -9,8 +9,16 @@ class AuthController extends Controller
     //
     public function login_admin()
     {   
-        if( !empty(auth()->user()) && auth()->user()->is_admin == 1){
-            return redirect()->route('admin.dashboard');
+        if (!empty(Auth::check())) {
+            if (Auth::user()->user_type == 1) {
+                return redirect('admin/dashboard');
+            } else if (Auth::user()->user_type == 2) {
+                return redirect('teacher/dashboard');
+            } else if (Auth::user()->user_type == 3) {
+                return redirect('student/dashboard');
+            } else if (Auth::user()->user_type == 4) {
+                return redirect('parent/dashboard');
+            }
         }
 
         return view('admin.auth.login');
@@ -18,29 +26,34 @@ class AuthController extends Controller
 
     public function auth_login_admin(Request $request)
     {
-       
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
 
-        $remember = $request->has('remember');
+        $remember = !empty($request->remember) ? true : false;
 
-        if (auth()->attempt([
+        if (Auth::attempt([
             'email' => $request->email,
             'password' => $request->password,
-            'is_admin' => 1
+            'is_delete' => 0
         ], $remember)) {
 
             $request->session()->regenerate();
 
-            return redirect()->route('admin.dashboard')
-                ->with('success', 'Login successful');
+            if (Auth::user()->user_type == 1) {
+                return redirect('admin/dashboard');
+            } else if (Auth::user()->user_type == 2) {
+                return redirect('teacher/dashboard');
+            } else if (Auth::user()->user_type == 3) {
+                return redirect('student/dashboard');
+            } else if (Auth::user()->user_type == 4) {
+                return redirect('parent/dashboard');
+            }
 
         } else {
-
             return redirect()->back()
-                ->withErrors(['email' => 'Invalid credentials'])
+                ->with('error', 'Please enter correct email and password')
                 ->withInput(); 
         }
     }
@@ -52,7 +65,7 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('admin.login');
+        return redirect(url(''));
     }
 
     public function userRegister(Request $request)

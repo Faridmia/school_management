@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Auth;
+
 class AdminMiddleware
 {
     /**
@@ -15,13 +16,16 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->check() && auth()->user()->is_admin == 1) {
-            return $next($request);
+        if (Auth::check()) {
+            if (Auth::user()->user_type == 1) {
+                return $next($request);
+            } else {
+                Auth::logout();
+                return redirect(url(''))->with('error', 'Unauthorized access.');
+            }
         } else {
             Auth::logout();
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
-            return redirect()->route('admin.login')->with('error', 'You must be an admin to access this page.');
+            return redirect(url(''))->with('error', 'Please login first.');
         }
     }
 }
