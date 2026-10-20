@@ -25,10 +25,10 @@ Route::group(['middleware' => 'admin'], function () {
 
     // Admin Management
     Route::get('/admin/admin/list', [AdminController::class, 'list'])->name('admin.admin.list');
-    Route::get('/admin/admin/add', [AdminController::class, 'add'])->name('admin.admin.add');
-    Route::post('/admin/admin/add', [AdminController::class, 'insert']);
+    Route::get('/admin/admin/add', [AdminController::class, 'create'])->name('admin.admin.add');
+    Route::post('/admin/admin/add', [AdminController::class, 'store'])->name('admin.admin.store');
     Route::get('/admin/admin/edit/{id}', [AdminController::class, 'edit'])->name('admin.admin.edit');
-    Route::post('/admin/admin/edit/{id}', [AdminController::class, 'update']);
+    Route::match(['post', 'put'], '/admin/admin/edit/{id}', [AdminController::class, 'update'])->name('admin.admin.update');
     Route::get('/admin/admin/delete/{id}', [AdminController::class, 'delete'])->name('admin.admin.delete');
 
     // Class Management
@@ -57,6 +57,37 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('/admin/assign_subject/edit_single/{id}', [\App\Http\Controllers\ClassSubjectController::class, 'edit_single'])->name('admin.assign_subject.edit_single');
     Route::post('/admin/assign_subject/edit_single/{id}', [\App\Http\Controllers\ClassSubjectController::class, 'update_single']);
 
+    // Student Management
+    Route::get('/admin/student/list', [\App\Http\Controllers\StudentController::class, 'list'])->name('admin.student.list');
+    Route::get('/admin/student/add', [\App\Http\Controllers\StudentController::class, 'add'])->name('admin.student.add');
+    Route::post('/admin/student/add', [\App\Http\Controllers\StudentController::class, 'insert']);
+    Route::get('/admin/student/edit/{id}', [\App\Http\Controllers\StudentController::class, 'edit'])->name('admin.student.edit');
+    Route::post('/admin/student/edit/{id}', [\App\Http\Controllers\StudentController::class, 'update']);
+    Route::get('/admin/student/delete/{id}', [\App\Http\Controllers\StudentController::class, 'delete'])->name('admin.student.delete');
+
+    // Parent Management
+    Route::get('/admin/parent/list', [\App\Http\Controllers\ParentController::class, 'list'])->name('admin.parent.list');
+    Route::get('/admin/parent/add', [\App\Http\Controllers\ParentController::class, 'add'])->name('admin.parent.add');
+    Route::post('/admin/parent/add', [\App\Http\Controllers\ParentController::class, 'insert']);
+    Route::get('/admin/parent/edit/{id}', [\App\Http\Controllers\ParentController::class, 'edit'])->name('admin.parent.edit');
+    Route::post('/admin/parent/edit/{id}', [\App\Http\Controllers\ParentController::class, 'update']);
+    Route::get('/admin/parent/delete/{id}', [\App\Http\Controllers\ParentController::class, 'delete'])->name('admin.parent.delete');
+    Route::get('/admin/parent/my-student/{id}', [\App\Http\Controllers\ParentController::class, 'myStudent'])->name('admin.parent.my-student');
+    Route::get('/admin/parent/assign_student_parent/{student_id}/{parent_id}', [\App\Http\Controllers\ParentController::class, 'assignStudentParent']);
+    Route::get('/admin/parent/assign_student_parent_delete/{student_id}', [\App\Http\Controllers\ParentController::class, 'assignStudentParentDelete']);
+
+    // Teacher Management
+    Route::get('/admin/teacher/list', [\App\Http\Controllers\TeacherController::class, 'list'])->name('admin.teacher.list');
+    Route::get('/admin/teacher/add', [\App\Http\Controllers\TeacherController::class, 'add'])->name('admin.teacher.add');
+    Route::post('/admin/teacher/add', [\App\Http\Controllers\TeacherController::class, 'insert']);
+    Route::get('/admin/teacher/edit/{id}', [\App\Http\Controllers\TeacherController::class, 'edit'])->name('admin.teacher.edit');
+    Route::post('/admin/teacher/edit/{id}', [\App\Http\Controllers\TeacherController::class, 'update']);
+    Route::get('/admin/teacher/delete/{id}', [\App\Http\Controllers\TeacherController::class, 'delete'])->name('admin.teacher.delete');
+
+    // Admin Account
+    Route::get('/admin/account', [\App\Http\Controllers\UserController::class, 'MyAccount'])->name('admin.account');
+    Route::post('/admin/account', [\App\Http\Controllers\UserController::class, 'UpdateMyAccountAdmin']);
+
     // User Management
     Route::get('/admin/customer/list', [CustomerController::class, 'list'])->name('admin.customer.list');
     Route::get('/admin/customer/delete/{id}', [CustomerController::class, 'delete'])->name('admin.customer.delete');
@@ -67,6 +98,8 @@ Route::group(['middleware' => 'admin'], function () {
 // ---------------------------------------------
 Route::group(['middleware' => 'teacher'], function () {
     Route::get('/teacher/dashboard', [DashboardController::class, 'dashboard'])->name('teacher.dashboard');
+    Route::get('/teacher/account', [\App\Http\Controllers\UserController::class, 'MyAccount'])->name('teacher.account');
+    Route::post('/teacher/account', [\App\Http\Controllers\UserController::class, 'UpdateMyAccount']);
 });
 
 // ---------------------------------------------
@@ -74,6 +107,8 @@ Route::group(['middleware' => 'teacher'], function () {
 // ---------------------------------------------
 Route::group(['middleware' => 'student'], function () {
     Route::get('/student/dashboard', [DashboardController::class, 'dashboard'])->name('student.dashboard');
+    Route::get('/student/account', [\App\Http\Controllers\UserController::class, 'MyAccount'])->name('student.account');
+    Route::post('/student/account', [\App\Http\Controllers\UserController::class, 'UpdateMyAccountStudent']);
 });
 
 // ---------------------------------------------
@@ -81,4 +116,6 @@ Route::group(['middleware' => 'student'], function () {
 // ---------------------------------------------
 Route::group(['middleware' => 'parent'], function () {
     Route::get('/parent/dashboard', [DashboardController::class, 'dashboard'])->name('parent.dashboard');
+    Route::get('/parent/account', [\App\Http\Controllers\UserController::class, 'MyAccount'])->name('parent.account');
+    Route::post('/parent/account', [\App\Http\Controllers\UserController::class, 'UpdateMyAccountParent']);
 });

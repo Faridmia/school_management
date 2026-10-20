@@ -24,6 +24,16 @@ class AdminController extends Controller
         return view('admin.admin.add', $data );
     }
 
+    public function add()
+    {
+        return $this->create();
+    }
+
+    public function insert(Request $request)
+    {
+        return $this->store($request);
+    }
+
     public function store(Request $request)
     {
         $request->validate([
